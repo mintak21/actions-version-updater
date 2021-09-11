@@ -37,7 +37,6 @@ jobs:
         run: |
           latest=$(curl -H "Content-Type: application/json" https://api.github.com/repos/${{ matrix.repository }}/releases | jq -r '.[] | select(.prerelease|not) | .name' | sort -rn | head -n 1 | sed "s/v//g")
           echo "version=${latest}" >> $GITHUB_ENV
-          echo ${{ matrix.package }} ${latest}
 
       - name: Checkout target repository
         id: checkout
@@ -62,11 +61,11 @@ jobs:
           token: ${{ secrets.TOKEN_GITHUB }}
           commit-message: ":robot: automatic update ${{ matrix.package }} to ${{ env.latest }}"
           committer: ${{ env.COMITTER }} <${{ env.COMITTER }}@users.noreply.github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          signoff: false
-          branch: example-patches
+          # author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: true
+          branch: versionup/github_actions/main/${{ matrix.package }}-${{ env.latest }}
           delete-branch: true
-          title: "[Example] Update report"
+          title: ":arrow_up: Bump ${{ matrix.package }} to ${{ env.latest }}"
           body: |
             Update report
             - Updated with *today's* date
@@ -74,8 +73,7 @@ jobs:
 
             [1]: https://github.com/mintak21/actions-version-updater/actions/runs/${{ github.run_id }}
           labels: |
-            automated pr
+            github-actions
             ${{ matrix.package }}
-          assignees: peter-evans
           reviewers: mintak21
           draft: false
