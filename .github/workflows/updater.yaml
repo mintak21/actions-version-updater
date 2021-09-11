@@ -3,10 +3,6 @@ name: Github Actions Version Updater
 on:
   schedule:
     - cron: "0 6 * * 5"
-  push:
-    branches:
-      - main # TODO
-  workflow_dispatch:
 
 jobs:
   terraform-updater:
