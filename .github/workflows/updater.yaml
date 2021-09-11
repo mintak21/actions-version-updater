@@ -48,7 +48,7 @@ jobs:
       - name: Create commits
         id: commit
         run: |
-          ls -ltR .
+          ls -latR .
           # git config user.name '${{ env.COMITTER }}'
           # git config user.email '${{ env.COMITTER }}@users.noreply.github.com'
 
