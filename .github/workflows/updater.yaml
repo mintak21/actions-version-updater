@@ -18,15 +18,15 @@ jobs:
           - mintak21/terraform
         package:
           - terraform
-          - tflint
-          - tfsec
+          # - tflint
+          # - tfsec
         include:
           - package: terraform
             repository: "hashicorp/terraform"
-          - package: tflint
-            repository: "terraform-linters/tflint"
-          - package: tfsec
-            repository: "aquasecurity/tfsec"
+          # - package: tflint
+          #   repository: "terraform-linters/tflint"
+          # - package: tfsec
+          #   repository: "aquasecurity/tfsec"
       fail-fast: false
     env:
       COMITTER: version-update-bot
@@ -37,6 +37,7 @@ jobs:
         run: |
           latest=$(curl -H "Content-Type: application/json" https://api.github.com/repos/${{ matrix.repository }}/releases | jq -r '.[] | select(.prerelease|not) | .name' | sort -rn | head -n 1 | sed "s/v//g")
           echo "version=${latest}" >> $GITHUB_ENV
+          echo '::set-output name=latest_version::${latest}'
 
       - name: Checkout target repository
         id: checkout
@@ -50,7 +51,8 @@ jobs:
         run: |
           # git config user.name '${{ env.COMITTER }}'
           # git config user.email '${{ env.COMITTER }}@users.noreply.github.com'
-          sed -i -e "s/${{ matrix.package }}=.*/${{ matrix.package }}=${{ env.latest }}/" .github/workflows/.versions
+          # sed -i -e "s/${{ matrix.package }}=.*/${{ matrix.package }}=${{ env.latest }}/" .github/workflows/.versions
+          sed -i -e "s/${{ matrix.package }}=.*/${{ matrix.package }}=${{ steps.random-color-generator.outputs.latest_version }}/" .github/workflows/.versions
           # # git commit -am ":robot: automatic update ${{ matrix.package }} to ${{ env.latest }}"
 
       - name: Create Pull Request
@@ -58,13 +60,13 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.TOKEN_GITHUB }}
-          commit-message: ":robot: automatic update ${{ matrix.package }} to ${{ env.latest }}"
+          commit-message: ":robot: automatic update ${{ matrix.package }} to ${{ steps.random-color-generator.outputs.latest_version }}"
           committer: ${{ env.COMITTER }} <${{ env.COMITTER }}@users.noreply.github.com>
           # author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: true
-          branch: versionup/github_actions/main/${{ matrix.package }}-${{ env.latest }}
+          branch: versionup/github_actions/main/${{ matrix.package }}-v${{ steps.random-color-generator.outputs.latest_version }}
           delete-branch: true
-          title: ":arrow_up: Bump ${{ matrix.package }} to ${{ env.latest }}"
+          title: ":arrow_up: Bump ${{ matrix.package }} to ${{ steps.random-color-generator.outputs.latest_version }}"
           body: |
             Update report
             - Updated with *today's* date
