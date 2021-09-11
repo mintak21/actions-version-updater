@@ -18,8 +18,8 @@ jobs:
           - mintak21/terraform
         package:
           - terraform
-          # - tflint
-          # - tfsec
+          - tflint
+          - tfsec
         include:
           - package: terraform
             repository: "hashicorp/terraform"
