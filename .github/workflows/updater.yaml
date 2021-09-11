@@ -11,15 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target:
+        target_repositry:
           - mintak21/terraform
           - mintak21/terraform-old
+        package:
+          - terraform
+          - tflint
+          - tfsec
         include:
-          - key: terraform
+          - package: terraform
             repository: "hashicorp/terraform"
-          - key: tflint
+          - package: tflint
             repository: "terraform-linters/tflint"
-          - key: tfsec
+          - package: tfsec
             repository: "aquasecurity/tfsec"
       fail-fast: false
 
@@ -29,10 +33,10 @@ jobs:
         run: |
           latest=$(curl -H "Content-Type: application/json" https://api.github.com/repos/${{ matrix.repository }}/releases | jq -r '.[] | select(.prerelease|not) | .name' | sort -rn | head -n 1 | sed "s/v//g")
           echo "version=${latest}" >> $GITHUB_ENV
-          echo ${{ matrix.key }} ${latest}
+          echo ${{ matrix.package }} ${latest}
 
       - name: Checkout target repository
         uses: actions/checkout@v2
         with:
-          repository: ${{ matrix.target }}
+          repository: ${{ matrix.target_repositry }}
           token: ${{ secrets.TOKEN_GITHUB }}
