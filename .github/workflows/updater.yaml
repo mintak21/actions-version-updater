@@ -18,15 +18,15 @@ jobs:
           - mintak21/terraform
         package:
           - terraform
-          # - tflint
-          # - tfsec
+          - tflint
+          - tfsec
         include:
           - package: terraform
             repository: "hashicorp/terraform"
-          # - package: tflint
-          #   repository: "terraform-linters/tflint"
-          # - package: tfsec
-          #   repository: "aquasecurity/tfsec"
+          - package: tflint
+            repository: "terraform-linters/tflint"
+          - package: tfsec
+            repository: "aquasecurity/tfsec"
       fail-fast: false
     env:
       COMITTER: version-update-bot
