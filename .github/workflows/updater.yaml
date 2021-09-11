@@ -1,0 +1,38 @@
+name: Github Actions Version Updater
+
+on:
+  schedule:
+    - cron: "0 6 * * 5"
+  workflow_dispatch:
+
+jobs:
+  terraform-updater:
+    name: actions version updater(related terraform)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - mintak21/terraform
+          - mintak21/terraform-old
+        include:
+          - key: terraform
+            repository: "hashicorp/terraform"
+          - key: tflint
+            repository: "terraform-linters/tflint"
+          - key: tfsec
+            repository: "aquasecurity/tfsec"
+      fail-fast: false
+
+    steps:
+      - name: Get Latest Version
+        id: latest-versions
+        run: |
+          latest=$(curl -H "Content-Type: application/json" https://api.github.com/repos/${{ matrix.repository }}/releases | jq -r '.[] | select(.prerelease|not) | .name' | sort -rn | head -n 1 | sed "s/v//g")
+          echo "version=${latest}" >> $GITHUB_ENV
+          echo ${{ matrix.key }} ${latest}
+
+      - name: Checkout target repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ matrix.target }}
+          token: ${{ secrets.TOKEN_GITHUB }}
