@@ -17,7 +17,7 @@ use actions below:
 ```yml
 jobs:
   build:
-    uses: mintak21/actions/.github/workflows/build_ghcr.yml@v0.3.0
+    uses: mintak21/actions/.github/workflows/build_ghcr.yml@v0.4.1
     with:
       image: api
 ```
@@ -32,18 +32,6 @@ your image name
 
 path to Dockerfile
 
-##### flavor
-
-global behavior for tags
-if you add latest tagg, set this below:
-
-```
-flavor: |
-  latest=true
-  prefix=
-  suffix=
-```
-
 ##### tags
 
 image tags
@@ -53,7 +41,7 @@ see the table below for default setting:
 |:----|:----|
 |create tag(vN.N.N)|vN.N.N|
 |push branch|{BRANCH_NAME}-{SHA256}|
-|pull_request|pr-{PR_NUMBER}-{SHA256}|
+|pull_request|pr-{PR_NUMBER}|
 
 #### gcr.io
 
