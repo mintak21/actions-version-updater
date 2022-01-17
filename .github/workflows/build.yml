@@ -7,6 +7,10 @@ on:
         description: イメージパス
         required: true
         type: string
+      # repository:
+      #   description: レポジトリ
+      #   required: true
+      #   type: string
       dockerfile:
         description: Dockerfileのパス
         required: true
@@ -36,8 +40,20 @@ jobs:
     #   contents: read
 
     steps:
+      - name: Checkout target repository
+        id: checkout
+        uses: actions/checkout@v2
+        # with:
+        #   repository: ${{ inputs.repository }}
+        #   token: ${{ secrets.TOKEN_GITHUB }}
+
       - name: test
         run: ls -ltR
+
+      - name: test 2
+        run: |
+          echo ${{ github.actor }}
+          echo ${{ github.repository }}
 
       - name: Set up QEMU
         id: qemu
