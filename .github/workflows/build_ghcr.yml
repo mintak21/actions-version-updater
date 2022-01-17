@@ -4,11 +4,11 @@ on:
   workflow_call:
     inputs:
       image:
-        description: イメージパス
+        description: image name
         required: true
         type: string
       dockerfile:
-        description: Dockerfileのパス
+        description: path to Dockerfile
         required: false
         type: string
         default: Dockerfile
@@ -22,19 +22,10 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout target repository
-        id: checkout
-        uses: actions/checkout@v2
-
-      - name: Set up QEMU
-        id: qemu
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set up Buildx
-        id: builder
-        uses: docker/setup-buildx-action@v1
+      - name: setup
+        uses: ./.github/actions/setup_build
         with:
-          version: v0.7.1
+          image: ghcr.io/${{ inputs.image }}
 
       - name: Login to Github Container Registry
         id: login
@@ -44,16 +35,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v3
-        with:
-          images: ghcr.io/${{ inputs.image }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=ref,event=branch,suffix=-{{sha}}
-            type=ref,event=pr,prefix=pr-,suffix=-{{sha}}
-
       - name: Build and Push Image
         id: build-push
         uses: docker/build-push-action@v2
@@ -61,5 +42,5 @@ jobs:
           file: ${{ inputs.dockerfile }}
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.setup.outputs.tags }}
+          labels: ${{ steps.setup.outputs.labels }}

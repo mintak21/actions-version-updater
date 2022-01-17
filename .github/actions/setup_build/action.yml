@@ -1,0 +1,36 @@
+name: Set up Docker build
+description: set up qemu / buildx / metadata
+inputs:
+  image:
+    description: image name
+    required: true
+outputs:
+  tags:
+    description: docker tags
+    value: ${{ steps.meta.outputs.tags }}
+  labels:
+    description: docker labels
+    value: ${{ steps.meta.outputs.labels }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up QEMU
+      id: qemu
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Buildx
+      id: builder
+      uses: docker/setup-buildx-action@v1
+      with:
+        version: v0.7.1
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: ghcr.io/${{ inputs.image }}
+        tags: |
+          type=semver,pattern={{version}}
+          type=ref,event=branch,suffix=-{{sha}}
+          type=ref,event=pr,prefix=pr-,suffix=-{{sha}}
