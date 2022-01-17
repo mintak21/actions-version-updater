@@ -24,8 +24,36 @@ jobs:
 
 inputs
 
-- image: your image name
-- dockerfile: path to Dockerfile
+##### image
+
+your image name
+
+##### dockerfile
+
+path to Dockerfile
+
+##### flavor
+
+global behavior for tags
+if you add latest tagg, set this below:
+
+```
+flavor: |
+  latest=true
+  prefix=
+  suffix=
+```
+
+##### tags
+
+image tags
+see the table below for default setting:
+
+|event|result|
+|:----|:----|
+|create tag(vN.N.N)|vN.N.N|
+|push branch|{BRANCH_NAME}-{SHA256}|
+|pull_request|pr-{PR_NUMBER}-{SHA256}|
 
 #### gcr.io
 
