@@ -12,6 +12,14 @@ on:
         required: false
         type: string
         default: Dockerfile
+      flavor:
+        description: global behavior for tags
+        required: false
+        type: string
+        default: |
+          latest=auto
+          prefix=
+          suffix=
       tags:
         description: image tags
         required: false
@@ -49,6 +57,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: ghcr.io/${{ inputs.image }}
+          flavor: ${{ inputs.flavor }}
           tags: ${{ inputs.tags }}
 
       - name: Login to Github Container Registry
