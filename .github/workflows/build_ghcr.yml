@@ -22,10 +22,29 @@ jobs:
       contents: read
 
     steps:
-      - name: setup
-        uses: mintak21/actions/.github/actions/setup_build@main
+      - name: Checkout target repository
+        id: checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Buildx
+        id: builder
+        uses: docker/setup-buildx-action@v1
         with:
-          image: ghcr.io/${{ inputs.image }}
+          version: v0.7.1
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/${{ inputs.image }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=ref,event=branch,suffix=-{{sha}}
+            type=ref,event=pr,prefix=pr-,suffix=-{{sha}}
 
       - name: Login to Github Container Registry
         id: login
@@ -42,5 +61,5 @@ jobs:
           file: ${{ inputs.dockerfile }}
           context: .
           push: true
-          tags: ${{ steps.setup.outputs.tags }}
-          labels: ${{ steps.setup.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
