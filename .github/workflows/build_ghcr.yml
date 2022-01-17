@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: setup
-        uses: ./.github/actions/setup_build
+        uses: mintak21/actions/.github/actions/setup_build
         with:
           image: ghcr.io/${{ inputs.image }}
 
