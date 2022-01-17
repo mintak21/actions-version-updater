@@ -26,7 +26,6 @@ on:
       registry-pass:
         description: レジストリパスワード
         required: true
-        type: string
 
 jobs:
   build:
