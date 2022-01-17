@@ -39,7 +39,7 @@ see the table below for default setting:
 
 |event|result|
 |:----|:----|
-|create tag(vN.N.N)|vN.N.N|
+|create tag(vN.N.N)|N.N.N|
 |push branch|{BRANCH_NAME}-{SHA256}|
 |pull_request|pr-{PR_NUMBER}|
 
