@@ -32,9 +32,9 @@ jobs:
   build:
     name: Build And Push Docker Image
     runs-on: ubuntu-20.04
-    # permissions:
-    #   packages: write
-    #   contents: read
+    permissions:
+      packages: write
+      contents: read
 
     steps:
       - name: test
