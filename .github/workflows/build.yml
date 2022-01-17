@@ -17,13 +17,13 @@ on:
         required: false
         type: string
         default: ghcr.io
-      registry-user:
+      registry_user:
         description: レジストリユーザー名
         required: false
         type: string
         default: ${{ github.actor }}
     secrets:
-      registry-pass:
+      registry_pass:
         description: レジストリパスワード
         required: true
 
