@@ -22,6 +22,7 @@ on:
         required: true
         type: string
         default: ${{ github.actor }}
+    secrets:
       registry-pass:
         description: レジストリパスワード
         required: true
@@ -56,7 +57,7 @@ jobs:
         with:
           registry: ${{ inputs.registry }}
           username: ${{ inputs.registry_user }}
-          password: ${{ inputs.registry_pass }}
+          password: ${{ secrets.registry_pass }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
