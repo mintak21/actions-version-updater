@@ -14,12 +14,12 @@ on:
         default: deployment/Dockerfile
       registry:
         description: イメージプッシュ先レジストリ
-        required: true
+        required: false
         type: string
         default: ghcr.io
       registry-user:
         description: レジストリユーザー名
-        required: true
+        required: false
         type: string
         default: ${{ github.actor }}
     secrets:
