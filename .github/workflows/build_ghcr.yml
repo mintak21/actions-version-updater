@@ -12,6 +12,14 @@ on:
         required: false
         type: string
         default: Dockerfile
+      tags:
+        description: image tags
+        required: false
+        type: string
+        default: |
+          type=semver,pattern={{version}}
+          type=ref,event=branch,suffix=-{{sha}}
+          type=ref,event=pr,prefix=pr-,suffix=-{{sha}}
 
 jobs:
   build:
@@ -41,10 +49,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: ghcr.io/${{ inputs.image }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=ref,event=branch,suffix=-{{sha}}
-            type=ref,event=pr,prefix=pr-,suffix=-{{sha}}
+          tags: ${{ inputs.tags }}
 
       - name: Login to Github Container Registry
         id: login
