@@ -47,7 +47,7 @@ jobs:
           sed -i -e "s/${{ matrix.package }}=.*/${{ matrix.package }}=${{ env.version }}/" .github/workflows/.versions
       - name: Create Pull Request
         id: pr
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.TOKEN_GITHUB }}
           commit-message: ":robot: automatic update ${{ matrix.package }} to ${{ env.version }}"
@@ -107,7 +107,7 @@ jobs:
 
       - name: Create Pull Request
         id: pr
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.TOKEN_GITHUB }}
           commit-message: ":robot: automatic update ${{ matrix.package }} to ${{ env.version }}"
