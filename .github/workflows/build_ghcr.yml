@@ -40,7 +40,7 @@ jobs:
 
       - name: Set up Buildx
         id: builder
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
         with:
           version: v0.7.1
 
